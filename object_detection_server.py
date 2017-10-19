@@ -29,6 +29,8 @@ from flask import render_template
 sys.path.append(os.path.join(os.path.dirname(__file__), "./"))
 from utils import label_map_util
 from utils import visualization_utils as vis_util
+# from tensorflow.models.object_detection.utils import label_map_util
+# from tensorflow.models.object_detection.utils import visualization_utils as vis_util
 
 app = Flask(__name__)
 
