@@ -3,34 +3,22 @@
 import os
 import six.moves.urllib as urllib
 import sys
-import tarfile
-import tensorflow as tf
-import zipfile
 
-from collections import defaultdict
-from io import StringIO
-from matplotlib import pyplot as plt
+import tensorflow as tf
 from PIL import Image
 import numpy as np
 import cv2
-import logging
-from io import StringIO
-import urllib
 from flask import Flask
 from flask import request
 from flask import jsonify
-from flask import make_response
-from flask import Response
 import requests
 from io import BytesIO
-from flask import send_file
 from flask import render_template
+from urllib import request as ul_request
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "./"))
 from utils import label_map_util
 from utils import visualization_utils as vis_util
-# from tensorflow.models.object_detection.utils import label_map_util
-# from tensorflow.models.object_detection.utils import visualization_utils as vis_util
 
 app = Flask(__name__)
 
@@ -88,7 +76,7 @@ def load_image_into_numpy_array(image):
     """
     (im_width, im_height) = image.size
     return np.array(image.getdata()).reshape(
-           (im_width, im_height, 3)).astype(np.uint8)
+           (im_height, im_width, 3)).astype(np.uint8)
 
 
 def get_box(box_xy, image):
@@ -132,15 +120,16 @@ def detection(url):
 
     :return:
     """
-    # image = Image.open(image_path)
+
     response = requests.get(url)
     image = Image.open(BytesIO(response.content))
-    # image = Image.open('D:/giant/models/object_detection/test_images/image1.jpg')
-    # the array based representation of the image will be used later in order to prepare the
-    # result image with boxes and labels on it.
+    print (image.size)
+
     image_np = load_image_into_numpy_array(image)
+
     # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
     image_np_expanded = np.expand_dims(image_np, axis=0)
+    # print(image_np_expanded.shape, type(image_np_expanded))
     # print(image_np_expanded)
     # Actual detection.
     (boxes, scores, classes, num) = sess.run(
@@ -189,6 +178,7 @@ def server():
             url = params['url']
             image, object_list = detection(url)
             img = Image.fromarray(image, 'RGB')
+            print(img.size)
             out = BytesIO()
             img.save(out, 'PNG')
             out = base64.b64encode(out.getvalue()).decode('ascii')
