@@ -81,8 +81,9 @@ def load_image_into_numpy_array(image):
 
 def get_box(box_xy, image):
     """
-
-    :return:
+    :param box_xy:
+    :param image:
+    :return: box
     """
     box = []
     (im_width, im_height) = image.size
@@ -99,6 +100,11 @@ def get_box(box_xy, image):
 
 def get_class_box(boxes, scores, classes, num, image):
     """
+    :param boxes:
+    :param scores:
+    :param classes:
+    :param num:
+    :param image:
     :return:
     """
     object_list = []
@@ -117,7 +123,7 @@ def get_class_box(boxes, scores, classes, num, image):
 
 def detection(url):
     """
-
+    :param url:
     :return:
     """
 
